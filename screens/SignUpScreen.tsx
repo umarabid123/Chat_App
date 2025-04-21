@@ -18,6 +18,11 @@ import AppButton from '../components/AppButton/AppButton'
 const SignUpScreen = () => {
   const [showPassword, setShowPassword] = useState(false)
 
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -40,17 +45,30 @@ const SignUpScreen = () => {
           <CustomTextInput
             source={require('../assets/images/Profile.png')}
             placeholder="Full Name"
+            onChangeText={setName}
+            value={name}
           />
           <CustomTextInput
             source={require('../assets/images/primary-mail-icon.png')}
             placeholder="Email"
+            onChangeText={setEmail}
+            value={email}
           />
           <CustomTextInput
             source={require('../assets/images/password.png')}
             placeholder="Password"
             secureTextEntry={!showPassword}
+            onChangeText={setPassword}
+            value={password}
           />
+          <CustomTextInput
+            source={require('../assets/images/password.png')}
+            placeholder="Confirm Password"
+            secureTextEntry={!showPassword}
+            onChangeText={setConfirmPassword}
+            value={confirmPassword}
 
+          />
           <View style={styles.rowBetween}>
             <AppText
               text="Terms of service"
