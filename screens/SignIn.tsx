@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet, Text, View } from 'react-native'
+import { Alert, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { globalStyle } from '../styles/globalStyle'
 import TopText from '../components/TopText/TopText'
@@ -11,12 +11,27 @@ import SocialLogin from '../components/SocialLogin/SocialLogin'
 import AuthFooter from '../components/AuthFooter/AuthFooter'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../components/Header/Header'
+import firestore from '@react-native-firebase/firestore'
 
 
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const navigation = useNavigation<any>()
+
+  const signIn = () => {
+    firestore().collection('users').where('email', '==', email).where('password', '==', password).get()
+      .then(res => {
+        console.log(JSON.stringify(res.docs[0].data()))
+        if (res.docs.length > 0) {
+          navigation.navigate('ChatScreen')
+        } else {
+          Alert.alert('Invalid email or password')
+        }
+      })
+  }
   return (
     <View style={[globalStyle.container, styles.mainContainer]}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -26,11 +41,15 @@ const SignInForm = () => {
         <CustomTextInput
           source={require('../assets/images/primary-mail-icon.png')}
           placeholder='Email'
+          onChangeText={setEmail}
+          value={email}
         />
         <CustomTextInput
           source={require('../assets/images/password.png')}
           placeholder='Password'
           secureTextEntry={!showPassword}
+          onChangeText={setPassword}
+          value={password}
         />
 
         <View style={styles.rowBetween}>
@@ -47,7 +66,8 @@ const SignInForm = () => {
         <AppButton
           text='Login'
           containerStyle={styles.loginButton}
-          route='ChatScreen'
+          onPress={signIn}
+
         />
 
         <DividerOr />

@@ -6,6 +6,7 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native'
 import Header from '../components/Header/Header'
 import { globalStyle } from '../styles/globalStyle'
@@ -20,7 +21,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const SignUpScreen = () => {
 
-  const navigation = useNavigation()
+  const navigation:any = useNavigation()
   const [showPassword, setShowPassword] = useState(false)
 
   const [name, setName] = useState('')
@@ -42,12 +43,12 @@ const SignUpScreen = () => {
         userId,
       })
       .then(() => {
-        alert("success")
+      Alert.alert("success")
         console.log('User registered successfully');
         navigation.navigate('signin')
       })
       .catch((error) => {
-        alert(error.message);
+         Alert.alert(error.message);
       });
   };
 
@@ -150,7 +151,7 @@ const SignUpScreen = () => {
               if(validate()){
                 register();
               }else{
-                alert("Please fill all the fields")
+                Alert.alert("Please fill all the fields")
               }
             }}
 
