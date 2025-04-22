@@ -52,6 +52,35 @@ const SignUpScreen = () => {
   };
 
 
+  const validate = () => {
+    let isValidate = true;
+  
+    if (name === "") {
+      alert("Name is required");
+      isValidate = false;
+    }
+    if (email === "") {
+      alert("Email is required");
+      isValidate = false;
+    }
+    if (password === "") {
+      alert("Password is required");
+      isValidate = false;
+    }
+    if (confirmPassword === "") {
+      alert("Confirm Password is required");
+      isValidate = false;
+    }
+    if (password !== "" && confirmPassword !== "" && password !== confirmPassword) {
+      alert("Password and Confirm Password should be same");
+      isValidate = false;
+    }
+  
+    return isValidate;
+  };
+  
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -117,7 +146,13 @@ const SignUpScreen = () => {
           <AppButton
             text="Register"
             containerStyle={styles.loginButton}
-            onPress={register}
+            onPress={() =>{
+              if(validate()){
+                register();
+              }else{
+                alert("Please fill all the fields")
+              }
+            }}
 
           />
         </View>
