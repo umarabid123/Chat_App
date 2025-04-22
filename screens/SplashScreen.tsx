@@ -24,7 +24,9 @@ const SplashScreen = ({ navigation }: any) => {
   const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Initial fade in and scale animation
+    let timeoutId;
+  
+    // Animation sequence
     Animated.sequence([
       Animated.parallel([
         Animated.timing(fadeAnim, {
@@ -38,8 +40,7 @@ const SplashScreen = ({ navigation }: any) => {
           useNativeDriver: true,
         }),
       ]),
-
-      // Pulse animation
+  
       Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
@@ -55,32 +56,29 @@ const SplashScreen = ({ navigation }: any) => {
         ]),
         { iterations: 2 }
       ),
-
-      // Progress bar animation
+  
       Animated.timing(progressAnim, {
         toValue: 1,
         duration: 2000,
         useNativeDriver: false,
       }),
     ]).start(() => {
-      // Navigate to onboarding screen after animations complete
-      setTimeout(() => {
-        if (navigation && navigation.replace) {
-          navigation.replace('onBoarding');
-        } else {
-          console.log("Navigation to Onboarding screen");
-        }
-      }, 500);
+      // Both login check and navigation after animation ends
+      checkLogin();
     });
-    checkLogin()
-
+  
+    // Cleanup on unmount
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
+  
   const checkLogin = async () => {
     const id = await AsyncStorage.getItem('UserId')
     if (id !== null) {
       navigation.navigate('ChatScreen')
     }else{
-      navigation.navigate('signin')
+      navigation.navigate('onBoarding')
     }
   }
 
