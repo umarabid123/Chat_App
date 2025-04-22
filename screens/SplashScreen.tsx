@@ -1,25 +1,28 @@
 import React, { useEffect, useRef } from 'react';
-import { 
-  View, 
-  Image, 
-  StyleSheet, 
-  Animated, 
-  Dimensions, 
+import {
+  View,
+  Image,
+  StyleSheet,
+  Animated,
+  Dimensions,
   StatusBar,
   Text
 } from 'react-native';
 import { Colors } from '../contexts/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 const logoImage = require('../assets/images/chat-icon.png');
 
-const SplashScreen = ({ navigation }:any) => {
+const SplashScreen = ({ navigation }: any) => {
+
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.3)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
-  
+
   useEffect(() => {
     // Initial fade in and scale animation
     Animated.sequence([
@@ -35,7 +38,7 @@ const SplashScreen = ({ navigation }:any) => {
           useNativeDriver: true,
         }),
       ]),
-      
+
       // Pulse animation
       Animated.loop(
         Animated.sequence([
@@ -52,7 +55,7 @@ const SplashScreen = ({ navigation }:any) => {
         ]),
         { iterations: 2 }
       ),
-      
+
       // Progress bar animation
       Animated.timing(progressAnim, {
         toValue: 1,
@@ -69,8 +72,18 @@ const SplashScreen = ({ navigation }:any) => {
         }
       }, 500);
     });
+    checkLogin()
+
   }, []);
-  
+  const checkLogin = async () => {
+    const id = await AsyncStorage.getItem('UserId')
+    if (id !== null) {
+      navigation.navigate('ChatScreen')
+    }else{
+      navigation.navigate('signin')
+    }
+  }
+
   // Interpolate progress width
   const progressWidth = progressAnim.interpolate({
     inputRange: [0, 1],
@@ -80,16 +93,16 @@ const SplashScreen = ({ navigation }:any) => {
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
-      
+
       {/* Background decorative elements */}
       <View style={styles.decorCircle1} />
       <View style={styles.decorCircle2} />
       <View style={styles.decorCircle3} />
       <View style={styles.decorLine1} />
       <View style={styles.decorLine2} />
-      
+
       {/* Logo container with animations */}
-      <Animated.View 
+      <Animated.View
         style={[
           styles.logoContainer,
           {
@@ -102,14 +115,14 @@ const SplashScreen = ({ navigation }:any) => {
         ]}
       >
         <View style={styles.logoWrapper}>
-          <Image 
-            source={logoImage} 
-            style={styles.logo} 
-            resizeMode="contain" 
+          <Image
+            source={logoImage}
+            style={styles.logo}
+            resizeMode="contain"
           />
         </View>
-        
-        <Animated.Text 
+
+        <Animated.Text
           style={[
             styles.appName,
             { opacity: fadeAnim }
@@ -118,19 +131,19 @@ const SplashScreen = ({ navigation }:any) => {
           Chat App
         </Animated.Text>
       </Animated.View>
-      
+
       {/* Progress bar */}
       <View style={styles.progressContainer}>
-        <Animated.View 
+        <Animated.View
           style={[
             styles.progressBar,
             { width: progressWidth }
-          ]} 
+          ]}
         />
       </View>
-      
+
       {/* Version text */}
-      <Animated.Text 
+      <Animated.Text
         style={[
           styles.versionText,
           { opacity: fadeAnim }

@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import Header from '../components/Header/Header'
 import firestore from '@react-native-firebase/firestore'
 import Loader from '../components/loader/Loader'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
@@ -31,14 +32,21 @@ const SignInForm = () => {
         console.log(JSON.stringify(res.docs[0].data()))
         if (res.docs.length > 0) {
           navigation.navigate('ChatScreen')
+          gotoNext(res.docs[0].data().name, res.docs[0].data().email, res.docs[0].data().userId)
         } else {
           Alert.alert('Invalid email or password')
         }
-      }).catch(err =>{
+      }).catch(err => {
         setLoading(false)
         console.log(err)
         Alert.alert('Error', 'Something went wrong')
       })
+  }
+
+  const gotoNext = async (name:any, email:any, userId:any) => {
+    await AsyncStorage.setItem('Name', name)
+    await AsyncStorage.setItem('Email', email)
+    await AsyncStorage.setItem('UserId', userId)
   }
   return (
     <View style={[globalStyle.container, styles.mainContainer]}>
