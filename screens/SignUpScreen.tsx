@@ -18,12 +18,13 @@ import AppButton from '../components/AppButton/AppButton'
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid'
 import { useNavigation } from '@react-navigation/native'
+import Loader from '../components/loader/Loader'
 
 const SignUpScreen = () => {
 
   const navigation:any = useNavigation()
   const [showPassword, setShowPassword] = useState(false)
-
+ const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -31,7 +32,7 @@ const SignUpScreen = () => {
 
   const register = () => {
     const userId = uuid.v4().toString();
-
+    setLoading(true)
     firestore()
       .collection('users')
       .doc(userId)
@@ -43,11 +44,17 @@ const SignUpScreen = () => {
         userId,
       })
       .then(() => {
+        setLoading(false)
+        setName('')
+        setEmail('')
+        setPassword('')
+        setConfirmPassword('')
       Alert.alert("success")
         console.log('User registered successfully');
         navigation.navigate('signin')
       })
       .catch((error) => {
+        setLoading(false)
          Alert.alert(error.message);
       });
   };
@@ -154,8 +161,8 @@ const SignUpScreen = () => {
                 Alert.alert("Please fill all the fields")
               }
             }}
-
           />
+          {loading && <Loader />}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

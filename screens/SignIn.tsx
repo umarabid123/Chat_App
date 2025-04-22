@@ -12,6 +12,7 @@ import AuthFooter from '../components/AuthFooter/AuthFooter'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../components/Header/Header'
 import firestore from '@react-native-firebase/firestore'
+import Loader from '../components/loader/Loader'
 
 
 
@@ -19,17 +20,24 @@ const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigation = useNavigation<any>()
 
   const signIn = () => {
+    setLoading(true)
     firestore().collection('users').where('email', '==', email).where('password', '==', password).get()
       .then(res => {
+        setLoading(false)
         console.log(JSON.stringify(res.docs[0].data()))
         if (res.docs.length > 0) {
           navigation.navigate('ChatScreen')
         } else {
           Alert.alert('Invalid email or password')
         }
+      }).catch(err =>{
+        setLoading(false)
+        console.log(err)
+        Alert.alert('Error', 'Something went wrong')
       })
   }
   return (
@@ -69,11 +77,11 @@ const SignInForm = () => {
           onPress={signIn}
 
         />
-
         <DividerOr />
         <SocialLogin />
         <AuthFooter route2='SignUp' text={"Don’t have an account?"} subText={'Register'} />
       </View>
+      {loading && <Loader />}
     </View>
   )
 }
