@@ -56,23 +56,23 @@ const SignUpScreen = () => {
     let isValidate = true;
   
     if (name === "") {
-      alert("Name is required");
+      console.log("Name is required");
       isValidate = false;
     }
     if (email === "") {
-      alert("Email is required");
+      console.log("Email is required");
       isValidate = false;
     }
     if (password === "") {
-      alert("Password is required");
+      console.log("Password is required");
       isValidate = false;
     }
     if (confirmPassword === "") {
-      alert("Confirm Password is required");
+      console.log("Confirm Password is required");
       isValidate = false;
     }
     if (password !== "" && confirmPassword !== "" && password !== confirmPassword) {
-      alert("Password and Confirm Password should be same");
+      console.log("Password and Confirm Password should be same");
       isValidate = false;
     }
   
