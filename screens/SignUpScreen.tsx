@@ -16,8 +16,11 @@ import { Colors } from '../contexts/theme'
 import AppButton from '../components/AppButton/AppButton'
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid'
+import { useNavigation } from '@react-navigation/native'
 
 const SignUpScreen = () => {
+
+  const navigation = useNavigation()
   const [showPassword, setShowPassword] = useState(false)
 
   const [name, setName] = useState('')
@@ -41,6 +44,7 @@ const SignUpScreen = () => {
       .then(() => {
         alert("success")
         console.log('User registered successfully');
+        navigation.navigate('signin')
       })
       .catch((error) => {
         alert(error.message);
