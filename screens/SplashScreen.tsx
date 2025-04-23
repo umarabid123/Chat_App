@@ -66,11 +66,6 @@ const SplashScreen = ({ navigation }: any) => {
       // Both login check and navigation after animation ends
       checkLogin();
     });
-  
-    // Cleanup on unmount
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
   }, []);
   
   const checkLogin = async () => {
